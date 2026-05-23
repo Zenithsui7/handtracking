@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Yoha Hand Tracking Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: 'Inter', sans-serif;
+        background: #0f0f0f;
+        color: #f0f0f0;
+        min-height: 100vh;
+      }
+      header {
+        padding: 1.2rem 2rem;
+        border-bottom: 1px solid #2a2a2a;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      header h1 { font-size: 1.2rem; font-weight: 600; letter-spacing: -0.02em; }
+      header span { font-size: 0.75rem; background: #1e3a5f; color: #60a5fa; padding: 2px 8px; border-radius: 999px; }
+      #main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem 1rem;
+        gap: 1.5rem;
+      }
+      #instructions {
+        max-width: 640px;
+        width: 100%;
+        background: #1a1a1a;
+        border: 1px solid #2a2a2a;
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+      .tip { display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; color: #aaa; }
+      .tip .icon { font-size: 1.3rem; }
+      #canvas { border-radius: 12px; overflow: hidden; }
+      #status {
+        max-width: 640px;
+        width: 100%;
+        font-size: 0.85rem;
+        color: #888;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+      }
+      #mobile { color: #f87171; display: none; }
+      #error { color: #f87171; }
+      #progress-bar-wrap {
+        background: #2a2a2a;
+        border-radius: 999px;
+        height: 6px;
+        width: 100%;
+        overflow: hidden;
+      }
+      #progress-bar {
+        background: #60a5fa;
+        height: 100%;
+        width: 0%;
+        transition: width 0.3s ease;
+        border-radius: 999px;
+      }
+    </style>
+
+    <header>
+      <h1>Yoha Hand Tracking</h1>
+      <span>WebGL</span>
+    </header>
+
+    <div id="main">
+      <div id="instructions">
+        <div class="tip"><span class="icon">✋</span> Move your hand to control the cursor</div>
+        <div class="tip"><span class="icon">🤏</span> Pinch to draw</div>
+        <div class="tip"><span class="icon">✊</span> Fist to clear canvas</div>
+      </div>
+
+      <div id="status">
+        <div id="mobile">Mobile detected — best experience on desktop.</div>
+        <div id="loading-row">
+          Loading model: <span id="progress">0%</span>
+          <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+        </div>
+        <div id="warmup" style="display:none">Warming up engine...</div>
+        <div id="camera" style="display:none">Requesting camera access...</div>
+        <div id="error"></div>
+      </div>
+
+      <div id="canvas"></div>
+    </div>
+
+    <script>
+      // Hook into progress bar
+      const observer = new MutationObserver(() => {
+        const pct = document.getElementById('progress').innerText;
+        document.getElementById('progress-bar').style.width = pct;
+        if (pct === '100%') {
+          setTimeout(() => {
+            document.getElementById('loading-row').style.display = 'none';
+          }, 500);
+        }
+      });
+      observer.observe(document.getElementById('progress'), { childList: true, characterData: true, subtree: true });
+    </script>
+  </body>
+</html>
